@@ -1,0 +1,51 @@
+# .NET
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.cache
+*.userosscache
+*.sln.docstates
+
+# Rider / VS / VSCode
+.vs/
+.idea/
+.vscode/
+
+###############
+# LOGS
+###############
+*.log
+logs/
+Log/
+log/
+
+
+# Appsettings locales
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json
+
+# KEEP MAIN appsettings.json (needed for config template)
+!appsettings.json
+
+# Ignore override files
+docker-compose.override.yml
+docker-compose.*.local.yml
+
+###############
+# DATABASE
+###############
+
+# Ignore dumps except the one needed to initialize DB
+*.sql
+!backup.sql
+
+# Data directories from postgres local containers
+pgdata/
+postgres-data/
+db-data/
+docker-db/
+

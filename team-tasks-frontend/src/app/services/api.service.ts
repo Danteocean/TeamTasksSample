@@ -1,0 +1,76 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import {
+  ApiResponse,
+  DeveloperWorkload,
+  ProjectHealth,
+  DeveloperDelayRisk,
+  Task,
+  Project,
+  ProjectTasksFilter,
+  PaginatedResponse,
+  CreateTaskRequest
+} from '../models/api.models';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ApiService {
+  private readonly apiUrl = 'http://localhost:5130/api';
+
+  constructor(private http: HttpClient) { }
+
+  // Dashboard endpoints
+  getDeveloperWorkload(): Observable<ApiResponse<DeveloperWorkload[]>> {
+    return this.http.get<ApiResponse<DeveloperWorkload[]>>(`${this.apiUrl}/dashboard/developer-workload`);
+  }
+
+  getProjectHealth(): Observable<ApiResponse<ProjectHealth[]>> {
+    return this.http.get<ApiResponse<ProjectHealth[]>>(`${this.apiUrl}/dashboard/project-health`);
+  }
+
+  getDeveloperDelayRisk(): Observable<ApiResponse<DeveloperDelayRisk[]>> {
+    return this.http.get<ApiResponse<DeveloperDelayRisk[]>>(`${this.apiUrl}/dashboard/developer-delay-risk`);
+  }
+
+  // Projects endpoints
+  getProjects(): Observable<ApiResponse<Project[]>> {
+    return this.http.get<ApiResponse<Project[]>>(`${this.apiUrl}/projects`);
+  }
+
+  getProjectTasks(projectId: number, filter: ProjectTasksFilter): Observable<ApiResponse<PaginatedResponse<Task>>> {
+    const params = new URLSearchParams();
+
+    if (filter.status) params.append('status', filter.status);
+    if (filter.developer) params.append('developer', filter.developer);
+    if (filter.page) params.append('page', filter.page.toString());
+    if (filter.pageSize) params.append('pageSize', filter.pageSize.toString());
+
+    return this.http.get<ApiResponse<PaginatedResponse<Task>>>(
+      `${this.apiUrl}/projects/${projectId}/tasks?${params.toString()}`
+    );
+  }
+
+  // Tasks endpoints
+  createTask(task: CreateTaskRequest): Observable<ApiResponse<boolean>> {
+    return this.http.post<ApiResponse<boolean>>(`${this.apiUrl}/tasks`, task);
+  }
+
+  updateTaskStatus(id: number, status: string): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}/tasks/${id}/status`, { status });
+  }
+
+  // Statuses and priorities
+  getTaskStatuses(): Observable<ApiResponse<string[]>> {
+    return this.http.get<ApiResponse<string[]>>(`${this.apiUrl}/status/task`);
+  }
+
+  getTaskPriorities(): Observable<ApiResponse<string[]>> {
+    return this.http.get<ApiResponse<string[]>>(`${this.apiUrl}/status/priority`);
+  }
+
+  getProjectStatuses(): Observable<ApiResponse<string[]>> {
+    return this.http.get<ApiResponse<string[]>>(`${this.apiUrl}/status/project`);
+  }
+}

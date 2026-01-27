@@ -1,0 +1,13 @@
+﻿namespace CoreLibrary.DTOs.Projects.Requests;
+
+public class ProjectTasksDtoRequest
+{
+
+    public int StatusCode { get; set; }
+
+    public int AssigneeId { get; set; }
+
+    public int Page { get; set; }
+
+    public int PageSize { get; set; }
+}

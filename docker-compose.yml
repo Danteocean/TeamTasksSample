@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+  tasks_sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: tasks_sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "StrongPass@123"
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: >
+        /opt/mssql-tools18/bin/sqlcmd
+        -S localhost
+        -U sa
+        -P "StrongPass@123"
+        -C
+        -Q "SELECT 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  tasks_db_init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: tasks_db_init
+    depends_on:
+      tasks_sql:
+        condition: service_healthy
+    volumes:
+      - ./db:/db
+    command: >
+      bash -c "
+      /opt/mssql-tools18/bin/sqlcmd
+      -S tasks_sql
+      -U sa
+      -P 'StrongPass@123'
+      -C
+      -i /db/script.sql
+      "
+    restart: "no"
+
+  tasks_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tasks_api
+    depends_on:
+      tasks_sql:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: >
+        Server=tasks_sql,1433;
+        Database=TeamTasksSample;
+        User Id=sa;
+        Password=StrongPass@123;
+        TrustServerCertificate=True;
+    ports:
+      - "8080:8080"
