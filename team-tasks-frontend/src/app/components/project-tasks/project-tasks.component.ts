@@ -3,15 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api.service';
-import { Task, ProjectTasksFilter } from '../../models/api.models';
+import { Task, ProjectTasksFilter, TaskStatus } from '../../models/api.models';
 import { TaskStatusChartComponent } from '../task-status-chart/task-status-chart.component';
 import { TableComponent } from '../table/table.component';
 import { DateFormatPipe } from '../../pipes/date-format.pipe';
 
 @Component({
   selector: 'app-project-tasks',
-  standalone: true,
-  imports: [CommonModule, FormsModule, TableComponent, TaskStatusChartComponent, DateFormatPipe],
+  standalone: false,
   template: `
     <div class="project-tasks-container">
       <header class="project-header">
@@ -24,8 +23,8 @@ import { DateFormatPipe } from '../../pipes/date-format.pipe';
           <label for="status-filter">Filtrar por estado:</label>
           <select id="status-filter" [(ngModel)]="filter.status" (change)="loadTasks()">
             <option value="">Todos</option>
-            <option *ngFor="let status of availableStatuses" [value]="status">
-              {{ status }}
+            <option *ngFor="let status of availableStatuses" [value]="status.code">
+              {{ status.description }}
             </option>
           </select>
         </div>
@@ -306,7 +305,7 @@ import { DateFormatPipe } from '../../pipes/date-format.pipe';
 export class ProjectTasksComponent implements OnInit {
   projectId: number = 0;
   tasks: Task[] = [];
-  availableStatuses: string[] = [];
+  availableStatuses: TaskStatus[] = [];
   availableDevelopers: string[] = [];
   
   filter: ProjectTasksFilter = {
@@ -354,6 +353,9 @@ export class ProjectTasksComponent implements OnInit {
           this.totalCount = response.data.totalCount;
           this.currentPage = response.data.currentPage;
           this.totalPages = Math.ceil(this.totalCount / this.filter.pageSize!);
+          
+          // Update available developers
+          this.availableDevelopers = [...new Set(this.tasks.map(task => task.assignedTo))];
         }
       },
       error: (error: any) => {
@@ -380,6 +382,11 @@ export class ProjectTasksComponent implements OnInit {
         console.error('Error loading task statuses:', error);
       }
     });
+
+    // Extract unique developers from current tasks
+    if (this.tasks.length > 0) {
+      this.availableDevelopers = [...new Set(this.tasks.map(task => task.assignedTo))];
+    }
   }
 
   changePage(page: number): void {

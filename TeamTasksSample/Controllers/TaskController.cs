@@ -35,4 +35,12 @@ public class TaskController : ControllerBase
         return Ok(await _taskService.UpddateTasks(id, taskUpdateRequest));
     }
 
+    [HttpGet("tasks")]
+    [ProducesResponseType(typeof(Response<bool>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Response<bool>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(Response<bool>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetTasks()
+    {
+        return Ok(await _taskService.GetTasks());
+    }
 }

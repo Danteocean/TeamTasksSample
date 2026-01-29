@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using CoreLibrary.DTOs.Status.Response;
 using CoreLibrary.DTOs.Task.Requests;
 using CoreLibrary.DTOs.Task.Response;
 using CoreLibrary.Interface.Repositories;
 using CoreLibrary.Interface.Services;
+using Domain.Querys.Status;
+using Domain.Querys.Task;
 using Domain.Wrappers;
 using Microsoft.Extensions.Configuration;
 
@@ -44,6 +47,29 @@ public class TasksService : ITaskService
         catch (Exception ex)
         {
             return new Response<TasksAddDtoResponse>(null) { State = "NoData", Message = ex.Message, Succeeded = false };
+        }
+    }
+
+    public async Task<Response<List<TaskDtoResponse>>> GetTasks()
+    {
+        try
+        {
+            GetTask getTask = new GetTask(ConnectionString);
+
+            var (data, message) = await getTask.GetTaskAsync();
+
+            if (data.Count != 0 || data.Any())
+            {
+                var mappedData = _mapper.Map<List<TaskDtoResponse>>(data);
+                
+                return new Response<List<TaskDtoResponse>>(mappedData) { State = "Ok", Message = message, Succeeded = true };
+            }
+            return new Response<List<TaskDtoResponse>>(null)
+            { State = "NoData", Message = message, Succeeded = true };
+        }
+        catch (Exception ex)
+        {
+            return new Response<List<TaskDtoResponse>>(null) { State = "NoData", Message = ex.Message, Succeeded = false };
         }
     }
 

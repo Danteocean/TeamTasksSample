@@ -1,41 +1,38 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { BaseChartDirective } from 'ng2-charts';
 
 import { AppComponent } from './app.component';
-
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { AppRoutingModule } from './app-routing.module';
+import { TableComponent } from './components/table/table.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ProjectTasksComponent } from './components/project-tasks/project-tasks.component';
+import { NewTaskComponent } from './components/new-task/new-task.component';
+import { TaskStatusChartComponent } from './components/task-status-chart/task-status-chart.component';
+import { DateFormatPipe } from './pipes/date-format.pipe';
 
 @NgModule({
   declarations: [
+    AppComponent,
+    TableComponent,
+    DashboardComponent,
+    ProjectTasksComponent,
+    NewTaskComponent,
+    TaskStatusChartComponent,
+    DateFormatPipe
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    CommonModule,
-    RouterModule.forRoot([
-      { path: '', 
-        loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent)
-      },
-      { path: 'dashboard', 
-        loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent)
-      },
-      { path: 'projects/:id', 
-        loadComponent: () => import('./components/project-tasks/project-tasks.component').then(m => m.ProjectTasksComponent)
-      },
-      { path: 'new-task', 
-        loadComponent: () => import('./components/new-task/new-task.component').then(m => m.NewTaskComponent)
-      },
-      { path: '**', redirectTo: '' }
-    ])
+    HttpClientModule,
+    AppRoutingModule,
+    BaseChartDirective
   ],
   providers: [
-    provideCharts(withDefaultRegisterables())
+    { provide: 'BASE_API_URL', useValue: 'http://localhost:44388/api' }
   ],
   bootstrap: [AppComponent]
 })

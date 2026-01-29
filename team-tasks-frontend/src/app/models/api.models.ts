@@ -6,21 +6,36 @@ export interface ApiResponse<T> {
 }
 
 export interface DeveloperWorkload {
-  developer: string;
-  openTasksCount: number;
-  totalEstimatedComplexity: number;
+  developerId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  openTasksCount?: number;
+  averageEstimatedComplexity?: number;
+}
+
+export interface Developer {
+  developerId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
 export interface ProjectHealth {
-  project: string;
-  client: string;
+  projectId: number;
+  projectName: string;
+  clientName: string;
+  status: string;
   totalTasks: number;
   openTasks: number;
   completedTasks: number;
 }
 
 export interface DeveloperDelayRisk {
-  developerName: string;
+  developerId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
   openTasksCount: number;
   avgDelayDays: number;
   nearestDueDate: string;
@@ -43,12 +58,33 @@ export interface Task {
 }
 
 export interface Project {
-  id: number;
+  projectId: number;
   name: string;
-  client: string;
+  clientName: string;
+  status: string;
   totalTasks: number;
   openTasks: number;
   completedTasks: number;
+}
+
+export interface ProjectStatus {
+  projectStatusId: number;
+  code: string;
+  description: string;
+}
+
+export interface TaskPriority {
+  taskPriorityId: number;
+  code: string;
+  description: string;
+  level: number;
+}
+
+export interface TaskStatus {
+  taskStatusId: number;
+  code: string;
+  description: string;
+  isFinal: boolean;
 }
 
 export interface ProjectTasksFilter {
@@ -69,9 +105,9 @@ export interface CreateTaskRequest {
   projectId: number;
   title: string;
   description: string;
-  assignedTo: string;
-  status: string;
-  priority: string;
+  assigneeId: number;
+  taskStatusId: number;
+  taskPriorityId: number;
   estimatedComplexity: number;
   dueDate: string;
 }

@@ -8,4 +8,6 @@ public interface ITaskService
 {
     Task<Response<TasksAddDtoResponse>> AddTasks(TasksAddDtoRequest tasksAddDtoResponse);
     Task<Response<TasksUpdateDtoResponse>> UpddateTasks(int id, TaskUpdateRequest taskUpdateRequest);
+
+    Task<Response<List<TaskDtoResponse>>> GetTasks();
 }

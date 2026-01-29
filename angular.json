@@ -5,26 +5,13 @@
     "packageManager": "npm",
     "analytics": false
   },
-  "newProjectRoot": "src",
   "projects": {
     "team-tasks-frontend": {
-      "projectType": "application",
-      "root": "",
-      "sourceRoot": "src",
-      "prefix": "app",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss",
-          "standalone": false
-        },
-        "@schematics/angular:directive": {
-          "standalone": false
-        },
-        "@schematics/angular:pipe": {
-          "standalone": false
-        }
-      },
-      "architect": {
+    "projectType": "application",
+    "root": "",
+    "sourceRoot": "src",
+    "prefix": "app",
+    "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
@@ -34,14 +21,7 @@
             "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
-            "budgets": [
-              {
-                "type": "initial",
-                "maximumWarning": "2mb",
-                "maximumError": "5mb"
-              }
-            ]
+            "styles": ["src/styles.scss"]
           },
           "configurations": {
             "production": {
@@ -65,8 +45,14 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "team-tasks-frontend:build",
-            "port": 4203
+            "port": 4203,
+            "proxyConfig": {
+              "/api/*": {
+                "target": "https://localhost:44388/api",
+                "secure": false,
+                "changeOrigin": true
+              }
+            }
           },
           "configurations": {
             "production": {
@@ -85,7 +71,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": "development"
         }
       }
     }

@@ -23,6 +23,9 @@
   "private": true,
   "packageManager": "npm@11.8.0",
   "dependencies": {
+    "@angular-devkit/build-angular": "^21.1.2",
+    "@angular-devkit/core": "^21.1.2",
+    "@angular/cli": "^21.1.2",
     "@angular/common": "^21.1.0",
     "@angular/compiler": "^21.1.0",
     "@angular/core": "^21.1.0",
@@ -37,7 +40,6 @@
   },
   "devDependencies": {
     "@angular/build": "^21.1.1",
-    "@angular/cli": "^21.1.1",
     "@angular/compiler-cli": "^21.1.0",
     "jsdom": "^27.1.0",
     "typescript": "~5.9.2",

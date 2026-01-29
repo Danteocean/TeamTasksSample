@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   ApiResponse,
   DeveloperWorkload,
@@ -10,14 +11,17 @@ import {
   Project,
   ProjectTasksFilter,
   PaginatedResponse,
-  CreateTaskRequest
+  CreateTaskRequest,
+  TaskStatus,
+  TaskPriority,
+  Developer
 } from '../models/api.models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private readonly apiUrl = 'http://localhost:5130/api';
+  private readonly apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) { }
 
@@ -26,8 +30,8 @@ export class ApiService {
     return this.http.get<ApiResponse<DeveloperWorkload[]>>(`${this.apiUrl}/dashboard/developer-workload`);
   }
 
-  getProjectHealth(): Observable<ApiResponse<ProjectHealth[]>> {
-    return this.http.get<ApiResponse<ProjectHealth[]>>(`${this.apiUrl}/dashboard/project-health`);
+  getProjectHealth(projectId: number): Observable<ApiResponse<ProjectHealth[]>> {
+    return this.http.get<ApiResponse<ProjectHealth[]>>(`${this.apiUrl}/dashboard/project-health/${projectId}`);
   }
 
   getDeveloperDelayRisk(): Observable<ApiResponse<DeveloperDelayRisk[]>> {
@@ -62,15 +66,34 @@ export class ApiService {
   }
 
   // Statuses and priorities
-  getTaskStatuses(): Observable<ApiResponse<string[]>> {
-    return this.http.get<ApiResponse<string[]>>(`${this.apiUrl}/status/task`);
+  getTaskStatuses(): Observable<ApiResponse<TaskStatus[]>> {
+    return this.http.get<ApiResponse<TaskStatus[]>>(`${this.apiUrl}/Status/TaskStatuses`);
   }
 
-  getTaskPriorities(): Observable<ApiResponse<string[]>> {
-    return this.http.get<ApiResponse<string[]>>(`${this.apiUrl}/status/priority`);
+  getTaskPriorities(): Observable<ApiResponse<TaskPriority[]>> {
+    return this.http.get<ApiResponse<TaskPriority[]>>(`${this.apiUrl}/status/TaskPriorities`);
   }
 
-  getProjectStatuses(): Observable<ApiResponse<string[]>> {
-    return this.http.get<ApiResponse<string[]>>(`${this.apiUrl}/status/project`);
+  getTasks(): Observable<ApiResponse<Task[]>> {
+    return this.http.get<ApiResponse<Task[]>>(`${this.apiUrl}/tasks`);
   }
+
+  getDeveloper(): Observable<ApiResponse<Developer[]>> {
+    return this.http.get<ApiResponse<Developer[]>>(`${this.apiUrl}/developers`);
+  }
+  
+
+  deleteTask(taskId: number): Observable<ApiResponse<boolean>> {
+    return this.http.delete<ApiResponse<boolean>>(`${this.apiUrl}/tasks/${taskId}`);
+  }
+
+  updateTask(taskId: number, task: Partial<CreateTaskRequest>): Observable<ApiResponse<boolean>> {
+    return this.http.put<ApiResponse<boolean>>(`${this.apiUrl}/tasks/${taskId}`, task);
+  }
+
+  // Project status
+  getProjectStatuses(): Observable<ApiResponse<any[]>> {
+    return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/status/ProjectStatuses`);
+  }
+
 }

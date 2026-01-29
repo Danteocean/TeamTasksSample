@@ -40,7 +40,7 @@ Este es el frontend de la aplicación Team Tasks, desarrollado con Angular 21 qu
 
 - Node.js 18+ 
 - Angular CLI 21+
-- API backend .NET corriendo en `https://localhost:5001`
+- API backend .NET corriendo en `http://localhost:44388`
 
 ## Instalación y Ejecución
 
@@ -55,11 +55,11 @@ npm start
 ```
 o
 ```bash
-ng serve
+ng serve --port 4203
 ```
 
 3. **Abrir en navegador**:
-   Navegar a `http://localhost:4200/`
+   Navegar a `http://localhost:4203/`
 
 La aplicación se recargará automáticamente al modificar archivos.
 
@@ -67,7 +67,7 @@ La aplicación se recargará automáticamente al modificar archivos.
 
 La URL base de la API está configurada en `src/app/services/api.service.ts`:
 ```typescript
-private readonly apiUrl = 'https://localhost:5001/api';
+private readonly apiUrl = 'http://localhost:44388/api';
 ```
 
 Asegúrate que la API backend esté corriendo y accesible en esa dirección.
@@ -109,3 +109,17 @@ npm test
 - **Gráficos**: Chart.js 4.4 + ng2-charts 6.0
 - **Validaciones**: Angular Forms con validadores personalizados
 - **Manejo de errores**: Centralizado con mensajes de usuario amigables
+- **Componentes Standalone**: Arquitectura moderna de Angular 21
+- **Routing**: Angular Router con rutas protegidas y parámetros
+- **HTTP Client**: HttpClient con interceptores para manejo de errores
+
+## Endpoints de API Utilizados
+
+- `GET /api/dashboard/developer-workload` - Carga por desarrollador
+- `GET /api/dashboard/project-health` - Estado de proyectos
+- `GET /api/dashboard/developer-delay-risk` - Riesgo de retraso
+- `GET /api/projects` - Lista de proyectos
+- `GET /api/projects/{id}/tasks` - Tareas de proyecto con paginación
+- `POST /api/tasks` - Crear nueva tarea
+- `GET /api/status/task` - Estados de tareas disponibles
+- `GET /api/status/priority` - Prioridades disponibles

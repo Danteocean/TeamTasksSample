@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 export interface TableColumn {
   key: string;
@@ -10,8 +9,7 @@ export interface TableColumn {
 
 @Component({
   selector: 'app-table',
-  standalone: true,
-  imports: [CommonModule],
+  standalone: false,
   template: `
     <div class="table-container">
       <table class="custom-table">
@@ -152,6 +150,24 @@ export class TableComponent {
   }
 
   getCellValue(row: any, key: string): string {
-    return key.split('.').reduce((obj, k) => obj && obj[k], row) || '';
+    const value = key.split('.').reduce((obj: any, k: string) => obj && obj[k], row) || '';
+    
+    if (typeof value === 'boolean') {
+      return value ? 'Sí' : 'No';
+    }
+    
+    if (key.includes('Date') && value) {
+      try {
+        return new Date(value).toLocaleDateString('es-ES');
+      } catch {
+        return value;
+      }
+    }
+    
+    if (typeof value === 'number') {
+      return value.toString();
+    }
+    
+    return value !== null && value !== undefined ? String(value) : '';
   }
 }
