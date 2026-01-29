@@ -156,36 +156,6 @@ El frontend está configurado con Angular CLI 21 con las siguientes característ
 | `chart.js` | `^4.4.0` | Librería de gráficos |
 | `ng2-charts` | `^6.0.0` | Wrapper Angular para Chart.js [13](#2-12)  |
 
-## Configuración y Ejecución
-
-### Backend (ASP.NET Core 8.0)
-
-```bash
-# Restaurar paquetes
-dotnet restore
-
-# Ejecutar aplicación
-dotnet run --project TeamTasksSample
-
-# La API estará disponible en https://localhost:44388
-```
-
-### Frontend (Angular 21)
-
-```bash
-# Instalar dependencias
-cd team-tasks-frontend
-npm install
-
-# Iniciar servidor de desarrollo
-npm start
-# o
-ng serve --port 4203
-
-# Abrir en navegador: http://localhost:4203/
-```
-
-La aplicación se recargará automáticamente al modificar archivos [14](#2-13) .
 
 ## Integración Frontend-Backend
 
